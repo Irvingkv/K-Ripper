@@ -1,0 +1,22 @@
+# Carpetas de descargas multimedia
+musica/
+videos/
+
+# Binarios pesados de FFmpeg (no se suben a Git)
+ffmpeg/
+*.exe
+
+# Entornos virtuales y caché de Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+
+# Carpetas de pruebas y temporales
+test_output/
+*.log
+
+# Configuraciones de editores
+.vscode/
+.idea/
