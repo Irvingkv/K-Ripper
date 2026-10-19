@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>K-Ripper - Descargador Multimedia Universal</title>
+  <meta name="description" content="Descargador de videos MP4 y audio MP3 para YouTube, TikTok, Instagram, Twitter y streaming .m3u8.">
+  
+  <!-- Tipografía moderna Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Barra de navegación superior amplia y minimalista -->
+  <nav class="navbar">
+    <div class="nav-content">
+      <div class="brand">
+        <span class="brand-name">K-Ripper</span>
+      </div>
+      
+      <div class="nav-right">
+        <!-- Indicador de Red Local WiFi -->
+        <div class="wifi-pill" id="network-badge" title="Dirección para acceder desde otros dispositivos en tu red">
+          <span class="wifi-dot"></span>
+          <span id="network-ip">Conectando...</span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Contenedor Principal Amplio (Estilo Hero SaaS) -->
+  <main class="hero-container">
+    <div class="hero-header">
+      <h1 class="hero-title">Descarga Videos, Películas y Música Fácilmente</h1>
+      <p class="hero-subtitle">
+        Guarda contenido pegando un enlace de YouTube, TikTok, Instagram, Twitter / X o flujos directos de películas (.m3u8).
+      </p>
+    </div>
+
+    <!-- Barra de Búsqueda / Descarga Central (Inspirada en el diseño limpio de Flixier) -->
+    <div class="search-card">
+      <div class="search-bar">
+        <div class="search-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+          </svg>
+        </div>
+        
+        <input 
+          type="url" 
+          id="url-input" 
+          class="url-field" 
+          placeholder="Pega un enlace de video, película o playlist aquí..." 
+          autocomplete="off"
+          required
+        >
+
+        <button type="button" id="btn-paste" class="btn-paste-clean" title="Pegar del portapapeles">
+          Pegar
+        </button>
+
+        <div class="format-inline-switch">
+          <button type="button" class="btn-format-toggle active" id="btn-format-video" data-format="video">
+            MP4
+          </button>
+          <button type="button" class="btn-format-toggle" id="btn-format-audio" data-format="audio">
+            MP3
+          </button>
+        </div>
+
+        <button type="button" id="btn-download" class="btn-submit">
+          <span id="btn-text">Descargar</span>
+        </button>
+      </div>
+
+      <!-- Fila de opciones secundarias y estado debajo de la barra -->
+      <div class="search-subrow">
+        <div class="platform-indicator" id="platform-chip">
+          <span>🔗 Esperando enlace...</span>
+        </div>
+
+        <div class="subrow-actions">
+          <button type="button" class="btn-clear-all" id="btn-clear-all" title="Limpiar enlace, barra de progreso y consola">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="clear-svg">
+              <path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+            </svg>
+            <span>Limpiar todo</span>
+          </button>
+
+          <div class="custom-name-wrapper">
+            <button type="button" class="btn-toggle-name" id="btn-toggle-name">
+              + Nombre personalizado (opcional)
+            </button>
+            <input 
+              type="text" 
+              id="name-input" 
+              class="name-input-hidden" 
+              placeholder="Escribe el nombre del archivo o película..."
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tarjeta de Progreso en Vivo (Aparece limpia cuando hay descarga activa) -->
+    <div class="progress-section" id="progress-card" style="display: none;">
+      <div class="progress-info-row">
+        <div class="progress-title-group">
+          <span class="spinner-dot"></span>
+          <span class="progress-title-text" id="progress-media-title">Descargando...</span>
+        </div>
+        <div class="progress-right-group">
+          <span class="progress-percent" id="progress-percent-badge">0%</span>
+          <button type="button" class="btn-close-progress" id="btn-close-progress" title="Cerrar barra de progreso">✕</button>
+        </div>
+      </div>
+
+      <div class="progress-bar-bg">
+        <div class="progress-bar-active" id="progress-fill" style="width: 0%;"></div>
+      </div>
+
+      <div class="progress-details-row">
+        <div class="detail-item">
+          <span class="detail-label">Velocidad</span>
+          <span class="detail-val" id="metric-speed">--</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Tiempo restante</span>
+          <span class="detail-val" id="metric-eta">--</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Carpeta</span>
+          <span class="detail-val" id="metric-folder">videos/</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Registro Plegable Discreto -->
+    <div class="logs-section">
+      <button type="button" class="btn-logs-toggle" id="btn-toggle-log">
+        <span id="log-arrow">▸</span> Ver registro del proceso en consola
+      </button>
+      <div class="logs-wrapper" id="log-container" style="display: none;">
+        <div class="logs-console" id="log-terminal">
+          <div class="log-entry info">Listo para descargar. Pega un enlace arriba.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Estado del motor FFmpeg -->
+    <div class="ffmpeg-badge" id="ffmpeg-status">
+      <span class="status-dot"></span>
+      <span class="status-msg">Verificando FFmpeg...</span>
+    </div>
+  </main>
+
+  <!-- Pie de página limpio -->
+  <footer class="footer">
+    <p>K-Ripper &copy; 2026</p>
+  </footer>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
